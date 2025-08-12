@@ -17,3 +17,4 @@ s6.cdnst.net
 s7.cdnst.net
 s8.cdnst.net
 s9.cdnst.net
+.*discord*.*
