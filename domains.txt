@@ -3,3 +3,17 @@ o.facebook.com
 facebook.com
 whatismyipaddress.com
 speedtest.net
+www.speedtest.net
+c.speedtest.net
+b.cdnst.net
+e.cdnst.net
+d.cdnst.net
+s1.cdnst.net
+s2.cdnst.net
+s3.cdnst.net
+s4.cdnst.net
+s5.cdnst.net
+s6.cdnst.net
+s7.cdnst.net
+s8.cdnst.net
+s9.cdnst.net
