@@ -48,3 +48,8 @@ workos.imgix.net
 cdn.workos.com
 images.workoscdn.com
 *.ct.sendgrid.net
+.featuregates.org
+.intercomcdn.com
+.statsig.com
+.chatgpt.com
+.openai.com
