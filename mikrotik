@@ -1,0 +1,86 @@
+:local debug "TEST1"
+:put $debug
+
+:local url "SetUrl"
+:local forwardTo "8.8.8.8"
+:local addrList "setName"
+:local tmpFile "domains.tmp"
+
+:local debug "TEST2"
+:put $debug
+
+/tool fetch url=$url dst-path=$tmpFile keep-result=yes check-certificate=no
+
+:if ([:len [/file find where name=$tmpFile]] = 0) do={
+    :put ("ERROR: file not downloaded: " . $url)
+    :error "download failed"
+}
+
+:local content [/file get $tmpFile contents]
+:local line
+
+:while ([:len $content] > 0) do={
+    :local nl [:find $content "\n"]
+
+    :if ($nl = nil) do={
+        :set line $content
+        :set content ""
+    } else={
+        :set line [:pick $content 0 $nl]
+        :set content [:pick $content ($nl + 1) [:len $content]]
+    }
+
+    :if ([:len $line] > 0 && [:pick $line ([:len $line]-1) [:len $line]] = "\r") do={
+        :set line [:pick $line 0 ([:len $line]-1)]
+    }
+
+    :while ([:len $line] > 0 && ([:pick $line 0 1] = " " || [:pick $line 0 1] = "\t")) do={
+        :set line [:pick $line 1 [:len $line]]
+    }
+    :while ([:len $line] > 0 && ([:pick $line ([:len $line]-1) [:len $line]] = " " || [:pick $line ([:len $line]-1) [:len $line]] = "\t")) do={
+        :set line [:pick $line 0 ([:len $line]-1)]
+    }
+
+    :if ([:len $line] > 0) do={
+        :local exists [/ip dns static find where name=$line]
+        :local existsReg [/ip dns static find where regexp=$line]
+        :put ("Line: " . $line)
+
+        :local found false
+        :local j 0
+        :local L [:len $line]
+        :while ($j < $L) do={
+            :local ch [:pick $line $j ($j + 1)]
+            :if ($ch = "*") do={
+                :set found true
+                :set j $L
+            } else={
+                :set j ($j + 1)
+            }
+        }
+        :if ($found) do={
+            :put ($line . " -> has *")
+            :if ([:len $existsReg] = 0) do={
+            /ip dns static add \
+                regexp=$line \
+                type=FWD \
+                forward-to=8.8.8.8 \
+                comment="Added by script for REXEXP" \
+                address-list=$addrList
+        }
+        } else={
+            :put ($line . " -> no *")
+            :if ([:len $exists] = 0) do={
+                /ip dns static add \
+                    name=$line \
+                    type=FWD \
+                    forward-to=$forwardTo \
+                    comment="Added by script" \
+                    address-list=$addrList
+                :put ("Added: " . $line)
+            } else={
+                :put ("Exists: " . $line)
+            }
+        }
+    }
+}
