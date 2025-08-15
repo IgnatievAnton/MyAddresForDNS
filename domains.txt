@@ -94,3 +94,7 @@ survey.instagram.com
 autodiscover.instagram.com
 platform.instagram.com
 cdninstagram.com
+augmentcode.com
+docs.augmentcode.com
+blog.augmentcode.com
+product.augmentcode.com
